@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+</head>
+<body>
+  <div id="chat log"> </div>
+  <input type = "text" placeholder = "your message here" id = "text box">
+  <button id = hellobutton>send</button><button id = startgame>play</button><button id = leavegame>leave</button>
+  <button id = cooperate>cooperate</button><button id = defect>defect</button>
+  <script>
+    var name = prompt("pick a username");
+    var socket = new WebSocket("ws://localhost:5001");
+    var id = null;
+
+    socket.onopen = function(event){
+      console.log(event);
+      socket.send("username;" + name);
+    };
+
+    var chatlog = document.getElementById("chat log");
+    socket.onmessage = function(event){
+      if(!id){
+        id = event.data;
+      };
+      if (event.data.startsWith("picked;")){
+        var picked = event.data.split(";");
+        if(picked[1] === id){
+          chatlog.innerHTML += "you are now playing with "+picked[2]+"<br>";
+        };
+      }else{
+      console.log(event);
+      chatlog.innerHTML += event.data+"<br>";
+    };
+    };
+
+    var hellobutton = document.getElementById("hellobutton");
+    var textbox = document.getElementById('text box');
+    var cooperate = document.getElementById('cooperate');
+    var defect = document.getElementById('defect');
+    var leavegame = document.getElementById('leavegame');
+    defect.onclick = function(event){
+      socket.send("choice;defect;" + id);
+    };
+    cooperate.onclick = function(event){
+      socket.send("choice;cooperate;" + id);
+    };
+    leavegame.onclick = function(event){
+      socket.send("leaving;" + id);
+    };
+    hellobutton.onclick = function(event){
+      var text = textbox.value;
+      socket.send("message;" + id + ";" + text);
+    };
+    var startgame = document.getElementById("startgame");
+    startgame.onclick = function(event){
+      socket.send("play;" + id);
+
+    };
+  </script>
+</body>
