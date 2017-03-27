@@ -1,5 +1,13 @@
 var server = require('ws').Server;
 var sqlite3 = require('sqlite3');
+var path = require('path');
+var express = require('express')
+const PORT = process.env.PORT || 3000;
+const INDEX = path.join(__dirname, 'index.html');
+const httpserver = express()
+  .use((req, res) => res.sendFile(INDEX) )
+  .listen(PORT, () => console.log(`Listening on ${PORT}`));
+
 var s = new server({ port: 5001 });
 var clientports = {};
 function allmessage(message){
@@ -45,7 +53,7 @@ function handlemessage(message, ws){
       if (e) {
         console.log(e);
       } else if (worm) {
-        db.run("INSERT INTO conversationlistener (senderID, message) VALUES(?,?)", [senderID, messageinfo]);
+        //db.run("INSERT INTO conversationlistener(senderID, message) VALUES(?,?)", [senderID, messageinfo]);
         console.log(worm.name + ": " + messageinfo);
         allmessage(worm.name + ": " + messageinfo);
       } else {
@@ -126,10 +134,10 @@ function handlemessage(message, ws){
 var db = new sqlite3.Database("Database");
 db.run("DROP TABLE IF EXISTS nametable");
 db.run("DROP TABLE IF EXISTS games");
-db.run("DROP TABLE IF EXISTS conversationlistener");
+//db.run("DROP TABLE IF EXISTS conversationlistener");
 
 db.run("CREATE TABLE IF NOT EXISTS nametable (id INTEGER PRIMARY KEY, name TEXT, playing BOOLEAN default 0, online INTEGER default 0)" );
-db.run("CREATE TABLE IF NOT EXISTS conversationlistener(id INTEGER PRIMARY KEY, senderID INTEGER, message TEXT)");
+//db.run("CREATE TABLE IF NOT EXISTS conversationlistener(id INTEGER PRIMARY KEY, senderID INTEGER, message TEXT)");
 db.run("CREATE TABLE IF NOT EXISTS games(id INTEGER PRIMARY KEY, player1id INTEGER, player2id INTEGER, player1choice TEXT, player2choice TEXT, active BOOLEAN)");
 
 
