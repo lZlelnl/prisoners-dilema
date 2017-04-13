@@ -10,8 +10,8 @@
   <button id = cooperate>cooperate</button><button id = defect>defect</button>
   <script>
     var name = prompt("pick a username");
-    var HOST = location.origin.replace(/^http/, 'ws')
-    var socket = new WebSocket(HOST);
+    var HOST = location.origin.replace(/^http/, 'ws');
+    var socket = new WebSocket("ws://localhost:5001");
     var id = null;
 
     socket.onopen = function(event){

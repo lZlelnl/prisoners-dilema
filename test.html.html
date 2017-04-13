@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+</head>
+<body>
+  <div id="chat log"> </div>
+
+  <script>
+  require("./server_functions");
+  require("test");
+  test('scoreing(choice;coooerate;2) should equal [100, 10, 2, 2]', function(assert) {
+    var result = getChange(486, 600);
+    var expected = [100, 10, 2, 2];
+    assert.deepEqual(result, expected);
+
+
+    });
+  });
+  </script>
+</body>
